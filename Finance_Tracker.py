@@ -6,7 +6,6 @@ import tkinter.ttk as ttk
 transactions = []
 
 def load_transactions():
-    """Load transactions from a JSON file."""
     try:
         with open("transactions.json", "r") as file:
             data = json.load(file)
@@ -16,13 +15,11 @@ def load_transactions():
         transactions = []
 
 def save_transactions():
-    """Save transactions to a JSON file."""
     data = {"transactions": transactions}
     with open("transactions.json", "w") as file:
         json.dump(data, file)
 
 def read_bulk_transactions_from_file(filename):
-    """Read transactions from a file and add them to the current transactions."""
     try:
         with open(filename, "r") as file:
             data = json.load(file)
@@ -35,7 +32,6 @@ def read_bulk_transactions_from_file(filename):
         print("File not found. No transactions were added.")
 
 def add_transaction():
-    """Add a new transaction."""
     amount = input("Enter the transaction amount: ")
     while not amount.replace(".", "", 1).isdigit():
         print("Invalid input. Please enter a valid amount.")
@@ -62,21 +58,17 @@ def add_transaction():
     print("Transaction added successfully.")
 
 def view_transactions():
-    """View all transactions in CLI with columns."""
     if not transactions:
         print("No transactions found.")
         return
-
-    # Print header with column names
+        
     print(f"{'Index':<6} {'Amount':<10} {'Category':<15} {'Type':<10} {'Date':<12}")
     print("-" * 60)
 
-    # Print each transaction row with aligned columns
     for index, transaction in enumerate(transactions, start=1):
         print(f"{index:<6} Rs. {transaction['amount']:<8.2f} {transaction['category']:<15} {transaction['type']:<10} {transaction['date']:<12}")
 
 def update_transaction():
-    """Update a transaction."""
     view_transactions()
     if not transactions:
         print("No transactions to update.")
@@ -95,7 +87,6 @@ def update_transaction():
         print("Invalid index.")
 
 def delete_transaction():
-    """Delete a transaction."""
     view_transactions()
     if not transactions:
         print("No transactions to delete.")
@@ -110,7 +101,6 @@ def delete_transaction():
         print("Invalid index.")
 
 def display_summary():
-    """Display summary of transactions."""
     if not transactions:
         print("No transactions to summarize.")
         return
@@ -124,7 +114,6 @@ def display_summary():
     print(f"Net Income: {net_income:.2f}")
 
 def launch_gui():
-    """Launch a simple GUI window."""
     root = tk.Tk()
     root.title("Personal Finance Tracker")
 
@@ -204,15 +193,12 @@ def open_view_transaction_window():
 
     tk.Label(view_win, text="All Transactions", font=("Helvetica", 14, "bold")).pack(pady=10)
 
-    # Frame for Treeview
     tree_frame = tk.Frame(view_win)
     tree_frame.pack(pady=10, fill="both", expand=True)
 
-    # Scrollbar
     scrollbar = tk.Scrollbar(tree_frame)
     scrollbar.pack(side="right", fill="y")
 
-    # Treeview Table
     columns = ("Index", "Amount", "Category", "Type", "Date")
     tree = ttk.Treeview(tree_frame, columns=columns, show="headings", yscrollcommand=scrollbar.set)
 
@@ -220,7 +206,6 @@ def open_view_transaction_window():
         tree.heading(col, text=col)
         tree.column(col, anchor="center", width=100)
 
-    # Add data
     for idx, t in enumerate(transactions, start=1):
         tree.insert("", "end", values=(idx, t["amount"], t["category"], t["type"], t["date"]))
 
@@ -234,7 +219,6 @@ def open_update_transaction_window():
 
     tk.Label(update_win, text="All Transactions", font=("Helvetica", 12, "bold")).pack(pady=5)
 
-    # Treeview for tabular display
     tree_frame = tk.Frame(update_win)
     tree_frame.pack(pady=10)
 
@@ -253,7 +237,6 @@ def open_update_transaction_window():
     tree.configure(yscrollcommand=scrollbar.set)
     scrollbar.pack(side="right", fill="y")
 
-    # Update form
     tk.Label(update_win, text="Enter Index to Update").pack()
     index_entry = tk.Entry(update_win)
     index_entry.pack()
@@ -314,7 +297,6 @@ def open_delete_transaction_window():
 
     tk.Label(del_win, text="All Transactions", font=("Helvetica", 12, "bold")).pack(pady=5)
 
-    # Table with scroll
     tree_frame = tk.Frame(del_win)
     tree_frame.pack(pady=10)
 
@@ -333,7 +315,6 @@ def open_delete_transaction_window():
     tree.configure(yscrollcommand=scrollbar.set)
     scrollbar.pack(side="right", fill="y")
 
-    # Entry for index to delete
     tk.Label(del_win, text="Enter Index to Delete").pack(pady=5)
     index_entry = tk.Entry(del_win)
     index_entry.pack()
@@ -351,7 +332,6 @@ def open_delete_transaction_window():
     tk.Button(del_win, text="Delete", command=delete, bg="red", fg="white").pack(pady=10)
 
 def open_display_summary_window():
-    """Display a summary of all transactions in a GUI popup."""
     if not transactions:
         messagebox.showinfo("Summary", "No transactions to summarize.")
         return
@@ -368,7 +348,6 @@ def open_display_summary_window():
     tk.Label(summary_win, text=f"Total Income: Rs. {income:.2f}").pack(pady=5)
     tk.Label(summary_win, text=f"Total Expenses: Rs. {expenses:.2f}").pack(pady=5)
     tk.Label(summary_win, text=f"Net Income: Rs. {net_income:.2f}").pack(pady=5)
-
 
 def open_read_bulk_transactions_window():
     bulk_win = tk.Toplevel()
@@ -421,19 +400,16 @@ def open_search_transaction_window():
 
     tk.Label(search_win, text="Search Transactions", font=("Helvetica", 14, "bold")).pack(pady=10)
 
-    # Search field selection
     tk.Label(search_win, text="Select Search Field:").pack()
     field_var = tk.StringVar(value="category")
     search_options = ["category", "type", "date"]
     field_menu = tk.OptionMenu(search_win, field_var, *search_options)
     field_menu.pack(pady=5)
 
-    # Search value entry
     tk.Label(search_win, text="Enter Search Value:").pack()
     search_entry = tk.Entry(search_win)
     search_entry.pack(pady=5)
 
-    # Results area
     result_frame = tk.Frame(search_win)
     result_frame.pack(pady=10, fill="both", expand=True)
 
@@ -471,7 +447,6 @@ def open_search_transaction_window():
         else:
             result_text.insert(tk.END, "No matching transactions found.")
 
-    # Bind real-time search on entry change
     search_entry.bind("<KeyRelease>", search)
 
 def open_sorted_transactions_window(order="asc"):
@@ -479,10 +454,8 @@ def open_sorted_transactions_window(order="asc"):
     sort_win.title(f"Transactions Sorted ({'Ascending' if order == 'asc' else 'Descending'})")
     sort_win.geometry("400x400")
 
-    # Sort transactions
     sorted_txns = sorted(transactions, key=lambda x: x["amount"], reverse=(order == "desc"))
 
-    # Create scrollable text area
     result_frame = tk.Frame(sort_win)
     result_frame.pack(pady=10, fill="both", expand=True)
 
@@ -493,7 +466,6 @@ def open_sorted_transactions_window(order="asc"):
     scrollbar.pack(side="right", fill="y")
     result_text.config(yscrollcommand=scrollbar.set)
 
-    # Display sorted transactions
     if sorted_txns:
         for idx, t in enumerate(sorted_txns, start=1):
             result_text.insert(tk.END,
@@ -508,7 +480,6 @@ def exit_application(root):
         root.destroy()
 
 def main_menu():
-    """Main menu for the application."""
     load_transactions()
     while True:
         print("\nPersonal Finance Tracker")
